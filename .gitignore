@@ -2,8 +2,6 @@
 # Project Specific
 ###############################################################################
 
-.claude/
-
 # Backup files
 *.backup
 *.bak
@@ -19,6 +17,10 @@
 *.suo
 *.userosscache
 *.sln.docstates
+
+# Claude AI files
+.claude/
+CLAUDE.md
 
 # Build results
 [Dd]ebug/

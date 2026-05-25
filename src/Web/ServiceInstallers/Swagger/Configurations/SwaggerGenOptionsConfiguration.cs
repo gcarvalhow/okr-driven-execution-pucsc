@@ -15,13 +15,13 @@ internal sealed class SwaggerGenOptionsConfiguration(IApiVersionDescriptionProvi
         {
             options.SwaggerDoc(description.GroupName, new OpenApiInfo
             {
-                Title = "Societiza API",
+                Title = "OKR Driven API",
                 Version = description.ApiVersion.ToString(),
                 Description = "API for managing corporate processes",
                 Contact = new OpenApiContact
                 {
-                    Name = "Vert Accounting",
-                    Email = "contato@vertaccounting.com"
+                    Name = "OKR Accounting",
+                    Email = "contato@okrdriven.com"
                 }
             });
         }
