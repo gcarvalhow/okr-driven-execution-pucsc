@@ -15,10 +15,38 @@ public class User : AggregateRoot
     public List<RefreshToken> RefreshTokens { get; private set; } = [];
 
     #region User Methods
+    public static User Create(string googleId, string name, string email, string? googleAvatarUrl)
+    {
+        User user = new();
+
+        user.RaiseEvent<DomainEvent.UserRegistered>(version => new(
+            Id: user.Id,
+            GoogleId: googleId,
+            Name: name,
+            Email: email,
+            GoogleAvatarUrl: googleAvatarUrl,
+            SecurityStamp: Guid.NewGuid(),
+            CreatedAt: user.CreatedAt,
+            Version: version
+        ));
+
+        return user;
+    }
+
+    public void UpdateName(string Name)
+    {
+        RaiseEvent<DomainEvent.UserNameUpdated>(version => new(
+            Id: Id,
+            Name: Name,
+            UpdatedAt: DateTimeOffset.UtcNow,
+            Version: version
+        ));
+    }
+
     public void RegenerateSecurityStamp()
     {
-        RaiseEvent<DomainEvents.UserSecurityStampRegenerated>(version => new(
-            UserId: Id,
+        RaiseEvent<DomainEvent.UserSecurityStampRegenerated>(version => new(
+            Id: Id,
             SecurityStamp: Guid.NewGuid(),
             UpdatedAt: DateTimeOffset.UtcNow,
             Version: version
@@ -31,7 +59,7 @@ public class User : AggregateRoot
     {
         var tokenId = Guid.NewGuid();
 
-        RaiseEvent<DomainEvents.UserRefreshTokenAdded>(version => new(
+        RaiseEvent<DomainEvent.UserRefreshTokenAdded>(version => new(
             UserId: Id,
             TokenId: tokenId,
             TokenHash: tokenHash,
@@ -45,7 +73,7 @@ public class User : AggregateRoot
 
     public void RevokeRefreshToken(Guid tokenId)
     {
-        RaiseEvent<DomainEvents.UserRefreshTokenRevoked>(version => new(
+        RaiseEvent<DomainEvent.UserRefreshTokenRevoked>(version => new(
             UserId: Id,
             TokenId: tokenId,
             RevokedAt: DateTimeOffset.UtcNow,
@@ -64,7 +92,23 @@ public class User : AggregateRoot
         => When(@event as dynamic);
 
     #region User Event Handlers
-    private void When(DomainEvents.UserSecurityStampRegenerated @event)
+    private void When(DomainEvent.UserRegistered @event)
+    {
+        Id = @event.Id;
+        GoogleId = @event.GoogleId;
+        Name = @event.Name;
+        Email = @event.Email;
+        GoogleAvatarUrl = @event.GoogleAvatarUrl;
+        SecurityStamp = @event.SecurityStamp;
+    }
+
+    private void When(DomainEvent.UserNameUpdated @event)
+    {
+        Name = @event.Name;
+        UpdatedAt = @event.UpdatedAt;
+    }
+
+    private void When(DomainEvent.UserSecurityStampRegenerated @event)
     {
         SecurityStamp = @event.SecurityStamp;
         UpdatedAt = @event.UpdatedAt;
@@ -72,10 +116,10 @@ public class User : AggregateRoot
     #endregion
 
     #region RefreshToken Event Handlers
-    private void When(DomainEvents.UserRefreshTokenAdded @event)
+    private void When(DomainEvent.UserRefreshTokenAdded @event)
         => RefreshTokens.Add(RefreshToken.Create(@event.TokenId, @event.UserId, @event.TokenHash, @event.ExpiresAt));
 
-    private void When(DomainEvents.UserRefreshTokenRevoked @event)
+    private void When(DomainEvent.UserRefreshTokenRevoked @event)
     {
         var token = RefreshTokens.FirstOrDefault(t => t.Id == @event.TokenId);
         token?.Revoke(@event.RevokedAt);

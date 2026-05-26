@@ -3,11 +3,29 @@ using Core.Domain.Events.Interfaces;
 
 namespace Identity.Domain.Events;
 
-public static class DomainEvents
+public static class DomainEvent
 {
     #region User Events
+    public sealed record UserRegistered(
+        Guid Id,
+        string GoogleId,
+        string Name,
+        string Email,
+        string? GoogleAvatarUrl,
+        Guid SecurityStamp,
+        DateTimeOffset CreatedAt,
+        ulong Version
+    ) : Message, IDomainEvent;
+
+    public sealed record UserNameUpdated(
+        Guid Id,
+        string Name,
+        DateTimeOffset UpdatedAt,
+        ulong Version
+    ) : Message, IDomainEvent;
+
     public sealed record UserSecurityStampRegenerated(
-        Guid UserId,
+        Guid Id,
         Guid SecurityStamp,
         DateTimeOffset UpdatedAt,
         ulong Version

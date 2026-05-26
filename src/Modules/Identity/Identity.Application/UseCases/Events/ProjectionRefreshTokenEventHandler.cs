@@ -7,15 +7,15 @@ using Microsoft.Extensions.Logging;
 namespace Identity.Application.UseCases.Events;
 
 public interface IProjectionRefreshTokenEventHandler :
-    IEventHandler<DomainEvents.UserRefreshTokenAdded>,
-    IEventHandler<DomainEvents.UserRefreshTokenRevoked>;
+    IEventHandler<DomainEvent.UserRefreshTokenAdded>,
+    IEventHandler<DomainEvent.UserRefreshTokenRevoked>;
 
 public class ProjectionRefreshTokenEventHandler(
     IIdentityProjection<ProjectionModel.RefreshToken> refreshTokenProjection,
     ILogger<ProjectionRefreshTokenEventHandler> logger
 ) : IProjectionRefreshTokenEventHandler
 {
-    public async Task Handle(DomainEvents.UserRefreshTokenAdded @event, CancellationToken cancellationToken = default)
+    public async Task Handle(DomainEvent.UserRefreshTokenAdded @event, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -37,7 +37,7 @@ public class ProjectionRefreshTokenEventHandler(
         }
     }
 
-    public async Task Handle(DomainEvents.UserRefreshTokenRevoked @event, CancellationToken cancellationToken = default)
+    public async Task Handle(DomainEvent.UserRefreshTokenRevoked @event, CancellationToken cancellationToken = default)
     {
         try
         {

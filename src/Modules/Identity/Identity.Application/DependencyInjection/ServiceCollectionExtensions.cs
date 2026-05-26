@@ -7,6 +7,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddEventInteractors(this IServiceCollection services)
         => services
-            .AddScoped<IProjectionUserEventHandler, ProjectionUserEventHandler>()
-            .AddScoped<IProjectionRefreshTokenEventHandler, ProjectionRefreshTokenEventHandler>();
+            .AddScoped<ProjectionUserEventHandler, ProjectionUserEventHandler>()
+            .AddScoped<ProjectionRefreshTokenEventHandler, ProjectionRefreshTokenEventHandler>();
 }

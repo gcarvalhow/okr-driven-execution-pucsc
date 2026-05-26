@@ -1,5 +1,6 @@
 using Identity.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Organization.Persistence.Context;
 
 namespace Web.StartupTasks;
 
@@ -10,6 +11,7 @@ internal sealed class MigrateDatabaseStartupTask(IServiceProvider provider, Data
         using IServiceScope scope = provider.CreateScope();
 
         await MigrateDatabaseAsync<IdentityDbContext>(scope, cancellationToken);
+        await MigrateDatabaseAsync<OrganizationDbContext>(scope, cancellationToken);
 
         signal.Complete();
     }

@@ -22,6 +22,9 @@
 .claude/
 CLAUDE.md
 
+# Specs
+specs/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

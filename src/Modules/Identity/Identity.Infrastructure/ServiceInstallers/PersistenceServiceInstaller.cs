@@ -32,7 +32,7 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
         services.AddScoped<IIdentityProjectionDbContext>(provider =>
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
-            string connectionString = configuration.GetSection("Projections").GetValue<string>("WorkflowTemplate");
+            string connectionString = configuration.GetSection("Projections").GetValue<string>("Identity");
 
             return new IdentityProjectionDbContext(connectionString);
         })

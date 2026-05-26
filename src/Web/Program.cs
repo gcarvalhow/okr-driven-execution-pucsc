@@ -51,7 +51,8 @@ builder.Services
         Core.Persistence.AssemblyReference.Assembly)
     .InstallModulesFromAssemblies(
         builder.Configuration,
-        Identity.Infrastructure.AssemblyReference.Assembly);
+        Identity.Infrastructure.AssemblyReference.Assembly,
+        Organization.Infrastructure.AssemblyReference.Assembly);
 
 // CORS
 builder.Services.AddCors(options =>
